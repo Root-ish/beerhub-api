@@ -1,12 +1,72 @@
 const { Router } = require('express')
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
+
+const { API_SECRET } = process.env
 const router = Router()
 
-router.post('/register', (req, res) => {
-  res.send('Registered')
+router.post('/register', async (req, res) => {
+  const { username, email, password } = req.body
+  const emailExists = await User.findOne({ email })
+
+  if (emailExists) {
+    res.status(400).json({
+      message: 'A user with that email already exists'
+    })
+  }
+
+  const newUser = new User({
+    username,
+    email: hash(email),
+    password: hash(password),
+  })
+
+  // Create JWT for user with user id in it
+  const token = jwt.sign({ userId: _id }, `${API_SECRET}`)
+
+  res.status(200).json({
+    message: `Sucessfully registered user: ${username}`,
+    user: {
+      userId: _id,
+      username,
+      email,
+    },
+    token
+  })
 })
 
-router.post('/login', (req, res) => {
-  res.send('Logged in')
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body
+
+  const user = await User.findOne({ email: verifyHash(email) })
+
+  const { _id } = user
+
+  if (user && verifyHash(user.password) === password) {
+    const token = jwt.sign({ userId: _id }, `${API_SECRET}`)
+
+    res.status(200).json({
+      message: 'Login successful',
+      user: {
+        userId: _id,
+        email,
+        username
+      },
+      token
+    })
+  } else {
+    res.status(401).json({
+      message: 'Email or password is incorrect'
+    })
+  }
 })
+
+function hash(stringToHash) {
+  return
+}
+
+function verifyHash(stringToVerify) {
+  return
+}
 
 module.exports = router
