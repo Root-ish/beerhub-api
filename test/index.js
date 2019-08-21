@@ -1,11 +1,11 @@
-const chai = require('chai')
+const { assert } = require('chai')
 
 describe('First test', () => {
   it('Should pass', () => {
-    chai.assert.equal(1, 1)
+    assert.equal(1, 1)
   })
 
   it('Should fail', () => {
-    chai.assert.equal('Hello', 'Not hello')
+    assert.equal('Hello', 'Not hello')
   })
 })
