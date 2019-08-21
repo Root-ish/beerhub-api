@@ -15,6 +15,7 @@
     "nodemon": "^1.19.1"
   },
   "scripts": {
+    "test": "mocha",
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
