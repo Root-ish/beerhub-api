@@ -21,7 +21,6 @@ router.post('/register', async (req, res) => {
     password: hash(password),
   })
 
-  // Create JWT for user with user id in it
   const token = jwt.sign({ userId: _id }, `${API_SECRET}`)
 
   res.status(200).json({
@@ -37,6 +36,9 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body
+
+  // @TODO: find solution for dehashing properties from db before checking
+  // since the email property is a hash and the req.body value isn't
 
   const user = await User.findOne({ email: verifyHash(email) })
 
@@ -61,6 +63,7 @@ router.post('/login', async (req, res) => {
   }
 })
 
+// @TODO: require hashing module from npm
 function hash(stringToHash) {
   return
 }
