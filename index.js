@@ -3,25 +3,19 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 require('dotenv').config()
 
-const port = 5454
-const app = express()
 const authRoute = require('./routes/auth.js')
 
-const authRoute = require('./routes/auth')
 const { MONGODB_URI, PORT } = process.env
 
-// Process environment uri and connect to database
-const uri = process.env.MONGODB_URI
+const app = express()
 
-mongoose.connect(uri, {'useNewUrlParser': true})
 mongoose
   .connect(MONGODB_URI, {'useNewUrlParser': true})
   .catch(handleConnectionError)
+
 mongoose.connection.on('error', logError)
 
-
-// Routes
-app.use('/api/user', authRoute)
+app
   .use(bodyParser.json())
   .use('/api/user', authRoute)
 
