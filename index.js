@@ -5,6 +5,7 @@ require('dotenv').config()
 
 const port = 5454
 const app = express()
+const authRoute = require('./routes/auth.js')
 
 const authRoute = require('./routes/auth')
 const { MONGODB_URI, PORT } = process.env
@@ -22,6 +23,7 @@ mongoose.connection.on('error', logError)
 // Routes
 app.use('/api/user', authRoute)
   .use(bodyParser.json())
+  .use('/api/user', authRoute)
 
 app.listen(port, () => {
   console.log(`Development server available on http://localhost:${PORT}`)
