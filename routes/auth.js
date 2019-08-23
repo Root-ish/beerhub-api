@@ -1,13 +1,15 @@
 const { Router } = require('express')
 const jwt = require('jsonwebtoken')
+const { hash, compare } = require('bcrypt')
 require('dotenv').config()
 
 const { API_SECRET } = process.env
+const User = require('../models/User')
 const router = Router()
 
 router.post('/register', async (req, res) => {
   const { username, email, password } = req.body
-  const emailExists = await User.findOne({ email })
+  const emailExists = Boolean(await User.findOne({ email }))
 
   if (emailExists) {
     res.status(400).json({
@@ -17,16 +19,17 @@ router.post('/register', async (req, res) => {
 
   const newUser = new User({
     username,
-    email: hash(email),
-    password: hash(password),
+    email,
+    password: hashString(password),
   })
 
-  const token = jwt.sign({ userId: _id }, `${API_SECRET}`)
+  User.save(newUser)
+
+  const token = jwt.sign({ username }, `${API_SECRET}`)
 
   res.status(200).json({
     message: `Sucessfully registered user: ${username}`,
     user: {
-      userId: _id,
       username,
       email,
     },
@@ -37,20 +40,16 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body
 
-  // @TODO: find solution for dehashing properties from db before checking
-  // since the email property is a hash and the req.body value isn't
+  const user = await User.findOne({ email })
+  const { username, _id } = user
 
-  const user = await User.findOne({ email: verifyHash(email) })
-
-  const { _id } = user
-
-  if (user && verifyHash(user.password) === password) {
-    const token = jwt.sign({ userId: _id }, `${API_SECRET}`)
+  if (user && verifyHash(password, user.password)) {
+    const token = jwt.sign({ username }, `${API_SECRET}`)
 
     res.status(200).json({
       message: 'Login successful',
       user: {
-        userId: _id,
+        _id,
         email,
         username
       },
@@ -63,13 +62,22 @@ router.post('/login', async (req, res) => {
   }
 })
 
-// @TODO: require hashing module from npm
-function hash(stringToHash) {
-  return
-}
-
-function verifyHash(stringToVerify) {
-  return
-}
-
 module.exports = router
+
+function hashString(string) {
+  return hash(string, 10)
+    .then(hash => {
+      return hash
+    })
+    .catch(error => [
+      console.log(`Error while hashing password: ${error}`)
+    ])
+}
+
+function verifyHash(string, hash) {
+  return compare(string, hash)
+    .then(res => res)
+    .catch(error => {
+      console.log(`Error while comparing password: ${error}`)
+    })
+}
