@@ -1,5 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
 require('dotenv').config()
 
 const port = 5454
@@ -20,6 +21,7 @@ mongoose.connection.on('error', logError)
 
 // Routes
 app.use('/api/user', authRoute)
+  .use(bodyParser.json())
 
 app.listen(port, () => {
   console.log(`Development server available on http://localhost:${PORT}`)
