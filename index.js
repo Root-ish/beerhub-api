@@ -14,13 +14,6 @@ mongoose.connect(uri, {'useNewUrlParser': true})
   .catch(handleConnectionError)
 mongoose.connection.on('error', logError)
 
-function handleConnectionError (){
-  console.log('500 server') // Add proper error handeling.
-}
-
-function logError (){
-  console.log('500 server') // Add proper error handeling.
-}
 
 // Routes
 app.use('/api/user', authRoute)
@@ -28,3 +21,11 @@ app.use('/api/user', authRoute)
 app.listen(port, () => {
   console.log(`Development server available on http://localhost:${port}`)
 })
+
+function handleConnectionError(error) {
+  console.log('Could not connect to database with error: ', error)
+}
+
+function logError(error) {
+  console.log('Database connection failed with error: ', error)
+}
