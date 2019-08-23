@@ -11,7 +11,10 @@ const userSchema = new Schema({
       type: String,
       required: true
     },
-    beers: Array
+    beers:  {
+      type: Array,
+      default: []
+    }
 })
 
 module.exports = mongoose.model('User', userSchema)
