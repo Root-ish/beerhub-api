@@ -19,7 +19,7 @@ app
   .use(bodyParser.json())
   .use('/api/user', authRoute)
 
-app.listen(port, () => {
+app.listen(PORT, () => {
   console.log(`Development server available on http://localhost:${PORT}`)
 })
 
