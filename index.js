@@ -24,9 +24,9 @@ app.listen(PORT, () => {
 })
 
 function handleConnectionError(error) {
-  console.log('Could not connect to database with error: ', error)
+  throw new Error('Could not connect to database with error: ', error)
 }
 
 function logError(error) {
-  console.log('Database connection failed with error: ', error)
+  throw new Error('Database connection failed while running with error: ', error)
 }
