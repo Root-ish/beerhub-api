@@ -21,32 +21,32 @@ router.post('/register', async (req, res) => {
 
   try {
     const hashed = await hash(password, 10)
-  const newUser = new User({
+    const newUser = new User({
       _id: new mongoose.Types.ObjectId(),
-    username,
-    email,
+      username,
+      email,
       password: hashed
-  })
+    })
 
     await newUser.save()
 
     const token = sign({ username }, API_SECRET)
 
-  res.status(200).json({
+    res.status(200).json({
       message: `Succesfully registered user: ${username}`,
-    user: {
-      username,
-      email,
-    },
-    token
-  })
+      user: {
+        username,
+        email,
+      },
+      token
+    })
   }
   catch(error) {
     console.log('Error while registering user: ', error)
 
     res.status(400).json({
       message: `Something went wrong while registering user: ${username}`
-})
+    })
   }
 })
 
@@ -59,7 +59,7 @@ router.post('/login', async (req, res) => {
   const isValidPassword = await compare(password, userPassword)
 
   if (user && isValidPassword) {
-  const { username, _id } = user
+    const { username, _id } = user
     const token = sign({ username }, API_SECRET)
 
     res.status(200).json({
