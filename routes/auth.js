@@ -79,21 +79,3 @@ router.post('/login', async (req, res) => {
 })
 
 module.exports = router
-
-function hashString(string) {
-  return hash(string, 10)
-    .then(hash => {
-      return hash
-    })
-    .catch(error => [
-      console.log(`Error while hashing password: ${error}`)
-    ])
-}
-
-function verifyHash(string, hash) {
-  return compare(string, hash)
-    .then(res => res)
-    .catch(error => {
-      console.log(`Error while comparing password: ${error}`)
-    })
-}
