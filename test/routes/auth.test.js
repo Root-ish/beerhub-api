@@ -1,7 +1,9 @@
 const { assert } = require('chai')
 
 describe('Auth test', () => {
-  it('Should fail', () => {
-    assert.equal('Login', 'Logout')
+  it('Can register a user via API', () => {
+
   })
+
+  it('Can login via API')
 })
