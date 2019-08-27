@@ -41,10 +41,12 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body
 
   const user = await User.findOne({ email })
-  const { username, _id } = user
+  const userPassword = user ? user.password: ''
 
-  if (user && verifyHash(password, user.password)) {
-    const token = jwt.sign({ username }, `${API_SECRET}`)
+  const isValidPassword = await compare(password, userPassword)
+
+  if (user && isValidPassword) {
+  const { username, _id } = user
 
     res.status(200).json({
       message: 'Login successful',
