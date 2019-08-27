@@ -1,11 +1,13 @@
 const { Router } = require('express')
-const jwt = require('jsonwebtoken')
 const { hash, compare } = require('bcrypt')
+const { sign } = require('jsonwebtoken')
+const mongoose = require('mongoose')
 require('dotenv').config()
 
 const { API_SECRET } = process.env
-const User = require('../models/User')
 const router = Router()
+
+const User = require('../models/User')
 
 router.post('/register', async (req, res) => {
   const { username, email, password } = req.body
@@ -17,24 +19,35 @@ router.post('/register', async (req, res) => {
     })
   }
 
+  try {
+    const hashed = await hash(password, 10)
   const newUser = new User({
+      _id: new mongoose.Types.ObjectId(),
     username,
     email,
-    password: hashString(password),
+      password: hashed
   })
 
-  User.save(newUser)
+    await newUser.save()
 
-  const token = jwt.sign({ username }, `${API_SECRET}`)
+    const token = sign({ username }, API_SECRET)
 
   res.status(200).json({
-    message: `Sucessfully registered user: ${username}`,
+      message: `Succesfully registered user: ${username}`,
     user: {
       username,
       email,
     },
     token
   })
+  }
+  catch(error) {
+    console.log('Error while registering user: ', error)
+
+    res.status(400).json({
+      message: `Something went wrong while registering user: ${username}`
+})
+  }
 })
 
 router.post('/login', async (req, res) => {
@@ -47,6 +60,7 @@ router.post('/login', async (req, res) => {
 
   if (user && isValidPassword) {
   const { username, _id } = user
+    const token = sign({ username }, API_SECRET)
 
     res.status(200).json({
       message: 'Login successful',
