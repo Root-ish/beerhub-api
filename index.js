@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 require('dotenv').config()
 
 const authRoute = require('./routes/auth.js')
@@ -16,7 +17,9 @@ mongoose
 mongoose.connection.on('error', logError)
 
 app
+  .use(cors())
   .use(bodyParser.json())
+
   .use('/api/user', authRoute)
 
 app.listen(PORT, () => {
