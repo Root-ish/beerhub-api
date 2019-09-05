@@ -1,30 +1,35 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
+const cors = require('cors')
 require('dotenv').config()
 
-const port = 5454
+const authRoute = require('./routes/auth.js')
+
+const { MONGODB_URI, PORT } = process.env
+
 const app = express()
 
-const authRoute = require('./routes/auth')
-
-// Process environment uri and connect to database
-const uri = process.env.MONGODB_URI
-
-mongoose.connect(uri, {'useNewUrlParser': true})
+mongoose
+  .connect(MONGODB_URI, {'useNewUrlParser': true})
   .catch(handleConnectionError)
+
 mongoose.connection.on('error', logError)
 
-function handleConnectionError (){
-  console.log('500 server') // Add proper error handeling.
-}
+app
+  .use(cors())
+  .use(bodyParser.json())
 
-function logError (){
-  console.log('500 server') // Add proper error handeling.
-}
+  .use('/api/user', authRoute)
 
-// Routes
-app.use('/api/user', authRoute)
-
-app.listen(port, () => {
-  console.log(`Development server available on http://localhost:${port}`)
+app.listen(PORT, () => {
+  console.log(`Development server available on http://localhost:${PORT}`)
 })
+
+function handleConnectionError(error) {
+  throw new Error('Could not connect to database with error: ', error)
+}
+
+function logError(error) {
+  throw new Error('Database connection failed while running with error: ', error)
+}
