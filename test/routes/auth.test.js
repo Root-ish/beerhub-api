@@ -1,12 +1,11 @@
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const randomString = require('randomstring')
-const User = require('../../models/User')
+const app = require('../../index')
 
 const { expect } = chai
 chai.use(chaiHttp)
 
-const app = require('../../index')
 const request = chai.request(app)
 
 const username = randomString.generate(8)
@@ -19,7 +18,7 @@ describe('Auth test', () => {
       .post('/api/user/register')
       .send({ username, email, password })
       .then(res => {
-        expect(res).to.have.status(200)
+        return expect(res).to.have.status(200)
       })
       .catch(err => {
         throw err
@@ -31,7 +30,7 @@ describe('Auth test', () => {
       .post('/api/user/login')
       .send({ email: 'test@test.nl', password: '1234' })
       .then(res => {
-        expect(res).to.have.status(200)
+        return expect(res).to.have.status(200)
       })
       .catch(err => {
         throw err
@@ -47,7 +46,7 @@ describe('Auth test', () => {
         password: '123',
       })
       .then(res => {
-        expect(res).to.have.status(400)
+        return expect(res).to.have.status(400)
       })
       .catch(err => {
         throw err
@@ -62,7 +61,10 @@ describe('Auth test', () => {
         password: 'testtest'
       })
       .then(res => {
-        expect(res).to.have.status(400)
+        return expect(res).to.have.status(400)
+      })
+      .catch(err => {
+        throw err
       })
   })
 })
