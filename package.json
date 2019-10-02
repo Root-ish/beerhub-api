@@ -23,7 +23,7 @@
     "nodemon": "^1.19.1"
   },
   "scripts": {
-    "test": "export NODE_ENV=test && mocha test/*.test.js test/routes/*.test.js test/models/*.test.js",
+    "test": "export NODE_ENV=test && mocha test/routes/*.test.js",
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
