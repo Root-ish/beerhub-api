@@ -14,9 +14,9 @@ router.post('/register', async (req, res) => {
   const emailExists = Boolean(await User.findOne({ email }))
 
   if (emailExists) {
-    res.status(400).json({
-      message: 'A user with that email already exists'
-    })
+    res.status(400).end(JSON.stringify({
+      message: 'A user with that email already exists',
+    }))
   }
 
   try {
@@ -25,28 +25,27 @@ router.post('/register', async (req, res) => {
       _id: new mongoose.Types.ObjectId(),
       username,
       email,
-      password: hashed
+      password: hashed,
     })
 
     await newUser.save()
 
     const token = sign({ username }, API_SECRET)
 
-    res.status(200).json({
+    res.status(200).end(JSON.stringify({
       message: `Succesfully registered user: ${username}`,
       user: {
         username,
         email,
       },
-      token
-    })
-  }
-  catch(error) {
+      token,
+    }))
+  } catch (error) {
     console.log('Error while registering user: ', error)
 
-    res.status(400).json({
+    res.status(400).end(JSON.stringify({
       message: `Something went wrong while registering user: ${username}`
-    })
+    }))
   }
 })
 
@@ -54,7 +53,7 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body
 
   const user = await User.findOne({ email })
-  const userPassword = user ? user.password: ''
+  const userPassword = user ? user.password : ''
 
   const isValidPassword = await compare(password, userPassword)
 
@@ -62,19 +61,19 @@ router.post('/login', async (req, res) => {
     const { username, _id } = user
     const token = sign({ username }, API_SECRET)
 
-    res.status(200).json({
+    res.status(200).end(JSON.stringify({
       message: 'Login successful',
       user: {
         _id,
         email,
-        username
+        username,
       },
-      token
-    })
+      token,
+    }))
   } else {
-    res.status(401).json({
-      message: 'Email or password is incorrect'
-    })
+    res.status(401).end(JSON.stringify({
+      message: 'Email or password is incorrect',
+    }))
   }
 })
 
