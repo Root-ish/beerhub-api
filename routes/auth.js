@@ -32,7 +32,7 @@ router.post('/register', async (req, res) => {
 
     const token = sign({ username }, API_SECRET)
 
-    res.status(200).json({
+    res.json({
       message: `Succesfully registered user: ${username}`,
       user: {
         username,
@@ -61,7 +61,7 @@ router.post('/login', async (req, res) => {
     const { username, _id } = user
     const token = sign({ username }, API_SECRET)
 
-    res.status(200).json({
+    res.json({
       message: 'Login successful',
       user: {
         _id,
