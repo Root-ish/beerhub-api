@@ -14,9 +14,9 @@ router.post('/register', async (req, res) => {
   const emailExists = Boolean(await User.findOne({ email }))
 
   if (emailExists) {
-    res.status(400).end(JSON.stringify({
+    res.status(400).send({
       message: 'A user with that email already exists',
-    }))
+    })
   }
 
   try {
@@ -32,20 +32,20 @@ router.post('/register', async (req, res) => {
 
     const token = sign({ username }, API_SECRET)
 
-    res.status(200).end(JSON.stringify({
+    res.status(200).send({
       message: `Succesfully registered user: ${username}`,
       user: {
         username,
         email,
       },
       token,
-    }))
+    })
   } catch (error) {
     console.log('Error while registering user: ', error)
 
-    res.status(400).end(JSON.stringify({
+    res.status(400).send({
       message: `Something went wrong while registering user: ${username}`
-    }))
+    })
   }
 })
 
@@ -61,7 +61,7 @@ router.post('/login', async (req, res) => {
     const { username, _id } = user
     const token = sign({ username }, API_SECRET)
 
-    res.status(200).end(JSON.stringify({
+    res.status(200).send({
       message: 'Login successful',
       user: {
         _id,
@@ -69,11 +69,11 @@ router.post('/login', async (req, res) => {
         username,
       },
       token,
-    }))
+    })
   } else {
-    res.status(401).end(JSON.stringify({
+    res.status(401).send({
       message: 'Email or password is incorrect',
-    }))
+    })
   }
 })
 
