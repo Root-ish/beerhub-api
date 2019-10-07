@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const randomString = require('randomstring')
