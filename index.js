@@ -10,7 +10,7 @@ const {
   MONGODB_URI,
   MONGODB_TEST_URI,
   PORT,
-  NODE_ENV
+  NODE_ENV,
 } = process.env
 
 const app = express()
