@@ -63,7 +63,7 @@ describe('Auth test', () => {
         password: 'testtest',
       })
       .then(res => {
-        return expect(res).to.have.status(400)
+        return expect(res).to.have.status(401)
       })
       .catch(err => {
         throw err
