@@ -18,5 +18,10 @@ module.exports = {
     "comma-dangle": ["error", "always-multiline"],
     "semi": ["error", "never"],
     "quotes": ["error", "single"],
+    "no-use-before-define": ["error", {
+      "functions": false,
+      "classes": false,
+      "variables": false,
+    }],
   },
 };
