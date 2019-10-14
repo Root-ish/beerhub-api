@@ -60,7 +60,7 @@ describe('Auth test', () => {
       .post('/api/user/login')
       .send({
         email: 'test@test.nl',
-        password: 'testtest'
+        password: 'testtest',
       })
       .then(res => {
         return expect(res).to.have.status(400)
