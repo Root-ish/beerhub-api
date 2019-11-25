@@ -2,7 +2,7 @@ const { Router } = require('express')
 const { hash, compare } = require('bcrypt')
 const { sign } = require('jsonwebtoken')
 const mongoose = require('mongoose')
-require('dotenv').config()
+require('dotenv-safe').config()
 
 const { API_SECRET } = process.env
 const router = Router()
