@@ -2,7 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-require('dotenv').config()
+require('dotenv-safe').config()
 
 const authRoute = require('./routes/auth.js')
 
